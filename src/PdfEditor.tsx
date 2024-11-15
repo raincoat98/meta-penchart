@@ -18,6 +18,9 @@ import {
   useTools,
   TLUiOverrides,
   TLParentId,
+  DefaultStylePanel,
+  DefaultStylePanelContent,
+  useRelevantStyles,
 } from "tldraw";
 import { ExportPdfButton } from "./ExportPdfButton";
 import { ExportImageButton } from "./ExportImageButton";
@@ -140,6 +143,30 @@ const BottomButton = track(() => {
   );
 });
 
+function CustomStylePanel() {
+  const styles = useRelevantStyles();
+  const editor = useEditor();
+
+  console.log(editor);
+
+  if (!styles) return null;
+
+  return (
+    <div
+      style={{
+        position: "fixed",
+        top: "50px",
+        left: "20px",
+        zIndex: 1000,
+      }}
+    >
+      <DefaultStylePanel>
+        <DefaultStylePanelContent styles={styles} />
+      </DefaultStylePanel>
+    </div>
+  );
+}
+
 export function PdfEditor({ pdf, image }: { pdf?: Pdf; image?: PdfPage }) {
   const [editor, setEditor] = useState<Editor | null>(null);
   const [pages, setPages] = useState<PdfPage[]>([]);
@@ -175,7 +202,7 @@ export function PdfEditor({ pdf, image }: { pdf?: Pdf; image?: PdfPage }) {
       ZoomMenu: null,
       MainMenu: null,
       Minimap: null,
-      // StylePanel: null,
+      StylePanel: CustomStylePanel,
       // NavigationPanel: null,
       Toolbar: null,
       // Toolbar: (props) => {
